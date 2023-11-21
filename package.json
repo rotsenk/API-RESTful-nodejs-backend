@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Api RESTful con Nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rotsenk/API-RESTful-nodejs-backend.git"
+  },
+  "author": "Nestor Rivas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rotsenk/API-RESTful-nodejs-backend/issues"
+  },
+  "homepage": "https://github.com/rotsenk/API-RESTful-nodejs-backend#readme"
+}
