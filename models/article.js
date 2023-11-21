@@ -11,4 +11,4 @@ var ArticleSchema = Schema({
 });
 
 module.exports = mongoose.model('Article', ArticleSchema);
-// articles --> guarda documentos de este tipo y con estructura dentro de la colección
+// articles --> guarda documentos de este tipo y con estructura dentro de la colección 
