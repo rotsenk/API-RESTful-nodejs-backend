@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/rotsenk/API-RESTful-nodejs-backend/issues"
   },
-  "homepage": "https://github.com/rotsenk/API-RESTful-nodejs-backend#readme"
+  "homepage": "https://github.com/rotsenk/API-RESTful-nodejs-backend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
