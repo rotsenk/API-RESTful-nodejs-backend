@@ -86,7 +86,7 @@ var controller = {
         if (last || last != undefined) {
             query.limit(5);
         }
-        
+
 
         //Sacar los datos de la base de dato, usando el modelo
         query.sort('-_id').exec()
@@ -109,7 +109,42 @@ var controller = {
                     message: 'Error al devolver los artículos: ' + err.message
                 });
             });
+    },
 
+    //método que saca un sólo artículo
+    getArticle: (req, res) => {
+        //Obtener el id de la url
+        var articleId = req.params.id;
+
+        //Comprobar que existe
+        if (!articleId || articleId == null) {
+            return res.status(200).send({
+                status: 'error',
+                message: 'Los datos no son válidos.'
+            });
+        }
+
+        // Buscar el artículo utilizando Promesas
+        Article.findById(articleId)
+            .then(article => {
+                if (!article) {
+                    return res.status(404).json({
+                        status: 'error',
+                        message: 'No se encontró el artículo.'
+                    });
+                }
+
+                return res.status(200).json({
+                    status: 'success',
+                    article
+                });
+            })
+            .catch(error => {
+                return res.status(500).json({
+                    status: 'error',
+                    message: 'Error al obtener el artículo. '
+                });
+            });
     }
 
 }; //end controller
