@@ -31,23 +31,46 @@ var controller = {
 
         } catch (error) {
             return res.status(200).send({
+                status: 'error',
                 message: 'Faltan datos por enviar.'
             });
         }
 
         if (validate_title && validate_content) {
             //Crear el objeto a guardar
+            var article = new Article();//utilizar la clase del modelo - instanciar
 
             //Asignar valores
+            article.title = params.title;
+            article.content = params.content;
+            article.image = null;
 
-            //Guardar artículo
+            //Guardar el artículo
+            article.save()
+                .then(articleStored => {
+                    if (!articleStored) {
+                        return res.status(404).send({
+                            status: 'error',
+                            message: 'El artículo no se guardó!'
+                        });
+                    }
 
-            //Devolver respuesta
+                    // Devolver respuesta
+                    return res.status(200).send({
+                        status: 'success',
+                        article: articleStored
+                    });
+                })
+                .catch(err => {
+                    return res.status(500).send({
+                        status: 'error',
+                        message: 'Error al guardar el artículo: ' + err.message
+                    });
+                });
+
+        } else {
             return res.status(200).send({
-                message: 'Validación Correcta!'
-            });
-        }else{
-            return res.status(200).send({
+                status: 'error',
                 message: 'Los datos no son válidos.'
             });
         }
