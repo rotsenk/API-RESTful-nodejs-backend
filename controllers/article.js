@@ -78,8 +78,18 @@ var controller = {
 
     //método para mostrar los datos almacenados
     getArticles: (req, res) => {
+
+        var query = Article.find({});
+
+        //adjuntar límite a la query
+        var last = req.params.last;
+        if (last || last != undefined) {
+            query.limit(5);
+        }
+        
+
         //Sacar los datos de la base de dato, usando el modelo
-        Article.find({}).sort('-_id').exec()
+        query.sort('-_id').exec()
             .then(articles => {
                 if (!articles || articles.length === 0) {
                     return res.status(404).send({
