@@ -12,7 +12,7 @@ var article_routes = require('./routes/article');
 
 //Middlewares
 app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 //CORS (permitir peticiones desde el frontend)
 
