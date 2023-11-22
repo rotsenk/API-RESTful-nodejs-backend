@@ -6,11 +6,11 @@ var Article = require('../models/article');
 var controller = {
 
     datosCurso: (req, res) => {
-        var hola = req.body.hola;
+        //var hola = req.body.hola;
         return res.status(200).send({
             curso: 'Lógica de Programación con Interfaces Gráficas',
             autor: 'Staenly Rivas',
-            url: '[building]'
+            url: 'https://bento.me/stanlee'
         });
     },
 
@@ -74,6 +74,32 @@ var controller = {
                 message: 'Los datos no son válidos.'
             });
         }
+    },
+
+    //método para mostrar los datos almacenados
+    getArticles: (req, res) => {
+        //Sacar los datos de la base de dato, usando el modelo
+        Article.find({}).sort('-_id').exec()
+            .then(articles => {
+                if (!articles || articles.length === 0) {
+                    return res.status(404).send({
+                        status: 'error',
+                        message: 'No hay artículos para mostrar.'
+                    });
+                }
+
+                return res.status(200).send({
+                    status: 'success',
+                    articles
+                });
+            })
+            .catch(err => {
+                return res.status(500).send({
+                    status: 'error',
+                    message: 'Error al devolver los artículos: ' + err.message
+                });
+            });
+
     }
 
 }; //end controller

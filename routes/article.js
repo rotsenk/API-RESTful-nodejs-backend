@@ -9,7 +9,8 @@ var router = express.Router();
 router.post('/datos-curso', ArticleController.datosCurso);
 router.get('/test-de-controlador', ArticleController.test);
 
-//rutas para útiles
+//rutas útiles
 router.post('/save', ArticleController.save);
+router.get('/articles', ArticleController.getArticles);
 
 module.exports = router;
