@@ -145,6 +145,58 @@ var controller = {
                     message: 'Error al obtener el artículo. '
                 });
             });
+    },
+
+    //método para actualizar datos
+    update: (req, res) => {
+        //Obtener el id del artículo por la url
+        var articleId = req.params.id;
+
+        //Obtener los datos que llegan por put
+        var params = req.body;
+
+        //Validar los datos
+        try {
+            var validate_title = !validator.isEmpty(params.title);
+            var validate_content = !validator.isEmpty(params.content);
+
+        } catch (err) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'Faltan datos por enviar. '
+            });
+        }
+
+        if (validate_title && validate_content) {
+            //Find and Update
+            Article.findOneAndUpdate({ _id: articleId }, params, { new: true })
+                .then(articleUpdated => {
+                    if (!articleUpdated) {
+                        return res.status(404).json({
+                            status: 'error',
+                            message: 'No existe el artículo.'
+                        });
+                    }
+
+                    return res.status(200).json({
+                        status: 'success',
+                        article: articleUpdated
+                    });
+                })
+                .catch(err => {
+                    return res.status(500).json({
+                        status: 'error',
+                        message: 'Error al actualizar '
+                    });
+                });
+
+        } else {
+            //Devolver respuesta
+            return res.status(200).json({
+                status: 'error',
+                message: 'Validación incorrecta! '
+            });
+        }
     }
 
 }; //end controller
