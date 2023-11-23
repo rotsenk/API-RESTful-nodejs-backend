@@ -197,6 +197,33 @@ var controller = {
                 message: 'Validación incorrecta! '
             });
         }
+    },
+
+    //Método para eliminar
+    delete: (req, res) => {
+        //obtener el id de la url
+        var articleId = req.params.id;
+
+        //Find And Delete
+        Article.findOneAndDelete({_id: articleId})
+        .then( articleRemoved => {
+            if (!articleRemoved) {
+                return res.status(404).json({
+                    status: 'error',
+                    message: 'No se eliminó. Es posible que el artículo no exista! '
+                });
+            }
+            return res.status(200).send({
+                status: 'success',
+                article: articleRemoved
+            });
+        })
+        .catch(err => {
+            return res.status(500).json({
+                status: 'error',
+                message: 'Error al eliminar. '
+            });
+        });
     }
 
 }; //end controller
