@@ -205,24 +205,71 @@ var controller = {
         var articleId = req.params.id;
 
         //Find And Delete
-        Article.findOneAndDelete({_id: articleId})
-        .then( articleRemoved => {
-            if (!articleRemoved) {
-                return res.status(404).json({
-                    status: 'error',
-                    message: 'No se eliminó. Es posible que el artículo no exista! '
+        Article.findOneAndDelete({ _id: articleId })
+            .then(articleRemoved => {
+                if (!articleRemoved) {
+                    return res.status(404).json({
+                        status: 'error',
+                        message: 'No se eliminó. Es posible que el artículo no exista! '
+                    });
+                }
+                return res.status(200).send({
+                    status: 'success',
+                    article: articleRemoved
                 });
-            }
-            return res.status(200).send({
-                status: 'success',
-                article: articleRemoved
+            })
+            .catch(err => {
+                return res.status(500).json({
+                    status: 'error',
+                    message: 'Error al eliminar. '
+                });
             });
-        })
-        .catch(err => {
-            return res.status(500).json({
+    },
+
+    //Método para subir archivos
+    upload: (req, res) => {
+        //Configurar el módulo de connect multiparty router/article.js (ready)
+
+
+        //Recoger el fichero de la petición
+        var file_name = 'Imagen no subida!!!';
+
+        if (!req.files) {
+            return res.status(404).send({
                 status: 'error',
-                message: 'Error al eliminar. '
+                message: file_name
             });
+        }
+
+        //Conseguir el nombre y la extensión del archivo
+        var file_path = req.files.file0.path;
+        var file_split = file_path.split('\\');
+
+        // * ADVERTENCIA * EN LINUX O MAC *
+        // var file_split = file_path.split('/');
+
+        //Nombre del archivo
+        var file_name = file_split[2];
+
+        //Extensión del fichero
+        var extension_split = file_name.split('\.');
+        var file_ext = extension_split[1];
+
+
+        //Comprobar la extensión, sólo imágenes, si no es válido entonces borrar el fichero
+        if (file_ext != 'png' && file_ext != 'jpg' && file_ext != 'jpeg' && file_ext != 'gif') {
+            //eliminar el archivo subido
+        } else {
+            //Si todo es válido
+
+            //Buscar artículo, asignarle el nombre de la imagen y actualizar
+        }
+
+
+        return res.status(500).json({
+            fichero: req.files,
+            split: file_split,
+            file_ext
         });
     }
 
