@@ -274,34 +274,55 @@ var controller = {
             var articleId = req.params.id;
 
             //Buscar artículo, asignarle el nombre de la imagen y actualizar
-            Article.findOneAndUpdate({_id: articleId}, {image: file_name}, {new: true})
-            .then(articleUpdated => {
-                if (!articleUpdated) {
-                    return res.status(404).json({
-                        status: 'error',
-                        message: 'No existe el artículo.'
+            Article.findOneAndUpdate({ _id: articleId }, { image: file_name }, { new: true })
+                .then(articleUpdated => {
+                    if (!articleUpdated) {
+                        return res.status(404).json({
+                            status: 'error',
+                            message: 'No existe el artículo.'
+                        });
+                    }
+
+                    return res.status(200).json({
+                        status: 'success',
+                        article: articleUpdated
                     });
-                }
-
-                return res.status(200).json({
-                    status: 'success',
-                    article: articleUpdated
+                })
+                .catch(err => {
+                    return res.status(500).json({
+                        status: 'error',
+                        message: 'Error al actualizar la imagen del artículo.'
+                    });
                 });
-            })
-            .catch(err => {
-                return res.status(500).json({
-                    status: 'error',
-                    message: 'Error al actualizar la imagen del artículo.'
-                });
-            });
 
-            return res.status(500).json({
-                fichero: req.files,
-                split: file_split,
-                file_ext
-            });
+            // return res.status(500).json({
+            //     fichero: req.files,
+            //     split: file_split,
+            //     file_ext
+            // });
         }
     }, //end upload file
+
+    //Sacar la imagen del backend
+    getImage: (req, res) => {
+        //Sacar el fichero que nos llega por la url
+        var file = req.params.image;
+        const path_file = `./upload/articles/${file}`;
+
+        const filePath = path.resolve(path_file);
+
+        fs.stat(filePath, (err, stats) => {
+            if (err || !stats.isFile()) {
+                return res.status(404).json({
+                    status: 'error',
+                    message: 'La imagen no existe'
+                });
+            }
+
+            // El archivo existe, envía el archivo como respuesta
+            return res.sendFile(filePath);
+        });
+    }, //end getImage
 
 
 
