@@ -1,6 +1,9 @@
 'use strict'
 
 var validator = require('validator');
+var fs = require('fs');
+var path = require('path');
+
 var Article = require('../models/article');
 
 var controller = {
@@ -259,19 +262,48 @@ var controller = {
         //Comprobar la extensión, sólo imágenes, si no es válido entonces borrar el fichero
         if (file_ext != 'png' && file_ext != 'jpg' && file_ext != 'jpeg' && file_ext != 'gif') {
             //eliminar el archivo subido
+            fs.unlink(file_path, (err) => {
+                return res.status(200).json({
+                    status: 'error',
+                    message: 'La extensión del archivo no es válida!'
+                });
+            });
+
         } else {
-            //Si todo es válido
+            //Si todo es válido, obtener id de la url
+            var articleId = req.params.id;
 
             //Buscar artículo, asignarle el nombre de la imagen y actualizar
+            Article.findOneAndUpdate({_id: articleId}, {image: file_name}, {new: true})
+            .then(articleUpdated => {
+                if (!articleUpdated) {
+                    return res.status(404).json({
+                        status: 'error',
+                        message: 'No existe el artículo.'
+                    });
+                }
+
+                return res.status(200).json({
+                    status: 'success',
+                    article: articleUpdated
+                });
+            })
+            .catch(err => {
+                return res.status(500).json({
+                    status: 'error',
+                    message: 'Error al actualizar la imagen del artículo.'
+                });
+            });
+
+            return res.status(500).json({
+                fichero: req.files,
+                split: file_split,
+                file_ext
+            });
         }
+    }, //end upload file
 
 
-        return res.status(500).json({
-            fichero: req.files,
-            split: file_split,
-            file_ext
-        });
-    }
 
 }; //end controller
 
